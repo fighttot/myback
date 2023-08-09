@@ -252,45 +252,22 @@ export const editLike = async (req, res) => {
 
 export const overLike = async (req, res) => {
   try {
-    if (req.user.cart.length < 1) {
-      for (let i = 0; i < req.user.like.length; i++) {
-        const product = await products.findById(req.user.like[i].product)
-        if (!product || !product.sell) {
-          throw new Error('NOT FOUND')
-        } else {
-          req.user.cart.push({
-            product: req.user.like[i].product,
-            quantity: 1
-          })
-          product.totle--
-          await product.save()
-        }
-      }
-    } else {
-      for (let i = 0; i < req.user.like.length; i++) {
-        const app = req.user.cart.some(item => item.product.toString() === req.user.like[i].product.toString())
-        const product = await products.findById(req.user.like[i].product)
+    for (let i = 0; i < req.user.like.length; i++) {
+      const app = req.user.cart.some(item => item.product.toString() === req.user.like[i].product.toString())
+      const product = await products.findById(req.user.like[i].product)
 
-        product.totle--
-        await product.save()
-        if (!product || !product.sell) {
-          throw new Error('NOT FOUND')
-        } else if (!app) {
-          req.user.cart.push({
-            product: req.user.like[i].product,
-            quantity: 1
-          })
-        }
+      product.totle--
+      await product.save()
+      if (!product || !product.sell) {
+        throw new Error('NOT FOUND')
+      } else if (!app) {
+        req.user.cart.push({
+          product: req.user.like[i].product,
+          quantity: 1
+        })
       }
     }
-    // // 建立儲存產品的 Promise 陣列
-    // const savePromises = req.user.like.map(async likeItem => {
-    //   const product = await products.findById(likeItem.product)
-    //   return product.save()
-    // })
 
-    // // 使用 Promise.all 等待所有儲存操作完成
-    // await Promise.all(savePromises)
     req.user.like = []
     await req.user.save()
     res.status(StatusCodes.OK).json({

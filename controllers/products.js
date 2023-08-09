@@ -198,6 +198,7 @@ export const AddSay = async (req, res) => {
       result: result.peopleSay
     })
   } catch (error) {
+    console.log(error)
     if (error.name === 'ValidationError') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
