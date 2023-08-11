@@ -95,3 +95,35 @@ export const getAll = async (req, res) => {
     })
   }
 }
+
+export const Alleditorder = async (req, res) => {
+  try {
+    const checkorder = await orders.findById(req.body.id)
+    if (req.body.check === 2) {
+      checkorder.ok = '訂單已成立'
+    } else if (req.body.check === 3) {
+      checkorder.ok = '訂單已完成'
+    } else if (req.body.check === 4) {
+      checkorder.ok = '訂單已取消'
+    } else if (req.body.check === 5) {
+      checkorder.ok = '取消確認中'
+    } else {
+      checkorder.ok = '訂單數據錯誤'
+    }
+    checkorder.changedate = Date.now()
+    checkorder.save()
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result: {
+        ok: checkorder.ok,
+        changedate: checkorder.changedate
+      }
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: '發生錯誤'
+    })
+  }
+}

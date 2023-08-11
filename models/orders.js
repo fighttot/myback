@@ -31,6 +31,14 @@ const schema = new mongoose.Schema({
       },
       message: '購物車不能為空'
     }
+  },
+  ok: {
+    type: String,
+    default: '訂單確認中'
+  },
+  changedate: {
+    type: Date,
+    default: Date.now
   }
 }, { versionKey: false })
 

@@ -13,7 +13,7 @@ const saySchema = new mongoose.Schema({
   review: {
     type: Boolean,
     required: [true, '缺少審核'],
-    default: false
+    default: true
   },
   date: {
     type: Date,
