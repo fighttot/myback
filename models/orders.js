@@ -39,6 +39,10 @@ const schema = new mongoose.Schema({
   changedate: {
     type: Date,
     default: Date.now
+  },
+  seventhome: {
+    type: String,
+    required: [true, '缺少地址']
   }
 }, { versionKey: false })
 
