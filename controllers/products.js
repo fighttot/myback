@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { grtMessageFromValidationError } from '../utils/error.js'
 // import users from '../models/users.js'
 import template from '../templates/anime.js'
+import template2 from '../templates/anime2.js'
 import bot from '../linebot/bot.js'
 export const create = async (req, res) => {
   try {
@@ -332,7 +333,32 @@ export const line = async (event) => {
     }
   } catch (error) {
     console.log(error)
-    event.reply('發生錯誤')
+  }
+}
+
+export const lineasner = async (event) => {
+  try {
+    const data = await products.find({ sell: true })
+    data.sort((a, b) => b.sellTotle - a.sellTotle)
+    const arr = []
+    for (let i = 0; i < 3; i++) {
+      const bubble = JSON.parse(JSON.stringify(template2))
+      bubble.header.contents[0].contents[0].url = data[i].images[0]
+      bubble.body.contents[0].contents[0].contents[0].text = data[i].name
+      bubble.body.contents[0].contents[0].contents[1].text = data[i].category
+      bubble.body.contents[0].contents[1].contents[0].contents[0].text = data[i].description
+      arr.push(bubble)
+    }
+    return await {
+      type: 'flex',
+      altText: 'ani',
+      contents: {
+        type: 'carousel',
+        contents: arr
+      }
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 

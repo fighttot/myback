@@ -66,7 +66,7 @@ export default {
                     action: {
                       type: 'uri',
                       label: 'action',
-                      uri: 'https://ani.gamer.com.tw/animeVideo.php?sn=31599'
+                      uri: 'https://fighttot.github.io/mywork/#/proHome'
                     }
                   },
                   {

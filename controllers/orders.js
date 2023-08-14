@@ -33,7 +33,8 @@ export const create = async (req, res) => {
     await orders.create({
       user: req.user._id,
       cart: req.user.cart,
-      seventhome: req.body.seventhome
+      seventhome: req.body.seventhome,
+      paywat: req.body.paywat
     })
     req.user.cart = []
     await req.user.save()

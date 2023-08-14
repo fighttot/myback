@@ -43,6 +43,10 @@ const schema = new mongoose.Schema({
   seventhome: {
     type: String,
     required: [true, '缺少地址']
+  },
+  paywat: {
+    type: String,
+    required: [true, '缺少付款方式']
   }
 }, { versionKey: false })
 
