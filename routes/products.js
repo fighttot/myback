@@ -3,7 +3,7 @@ import * as auth from '../middlewares/auth.js'
 import upload from '../middlewares/upload.js'
 import admin from '../middlewares/admin.js'
 import contentType from '../middlewares/contentType.js'
-import { create, getAll, get, getId, edit, AddSay, editSay, reviewSay, red, lineAll, lineasner } from '../controllers/products.js'
+import { create, getAll, get, getId, edit, AddSay, editSay, reviewSay, red, lineAll } from '../controllers/products.js'
 
 const router = express.Router()
 
@@ -18,6 +18,5 @@ router.patch('/:id/review', auth.jwt, reviewSay)
 router.post('/red', auth.jwt, red)
 
 router.post('/lineAll', auth.jwt, admin, lineAll)
-router.post('/lineAll', auth.jwt, admin, lineasner)
 
 export default router
