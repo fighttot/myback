@@ -17,7 +17,7 @@ router.patch('/:id/say', auth.jwt, contentType('application/json'), editSay)
 router.patch('/:id/review', auth.jwt, reviewSay)
 router.post('/red', auth.jwt, red)
 
-// router.post('/lineAll', auth.jwt, admin, lineAll)
+router.post('/lineAll', auth.jwt, admin, lineAll)
 router.post('/lineAll', auth.jwt, admin, lineasner)
 
 export default router
