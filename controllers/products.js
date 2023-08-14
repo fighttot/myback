@@ -2,7 +2,8 @@ import products from '../models/products.js'
 import { StatusCodes } from 'http-status-codes'
 import { grtMessageFromValidationError } from '../utils/error.js'
 // import users from '../models/users.js'
-
+import template from '../templates/anime.js'
+import bot from '../linebot/bot.js'
 export const create = async (req, res) => {
   try {
     const result = await products.create({
@@ -307,6 +308,41 @@ export const red = async (req, res) => {
       success: true,
       message: '成功',
       result
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: '發生錯誤'
+    })
+  }
+}
+
+export const line = async (event) => {
+  try {
+    const bubble = JSON.parse(JSON.stringify(template))
+    const data = await products.find({ sell: true })
+    console.log(data[data.length - 1].name)
+    bubble.body.contents[0].url = data[data.length - 1].images[0]
+    bubble.body.contents[1].contents[0].contents[0].text = data[data.length - 1].name
+    bubble.body.contents[1].contents[1].contents[0].text = data[data.length - 1].category
+    return {
+      type: 'flex',
+      altText: data[data.length - 1].name,
+      contents: bubble
+    }
+  } catch (error) {
+    console.log(error)
+    event.reply('發生錯誤')
+  }
+}
+
+export const lineAll = async (req, res) => {
+  try {
+    const message = await line(req)
+    bot.broadcast(message)
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '成功'
     })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

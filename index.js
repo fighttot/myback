@@ -9,6 +9,7 @@ import routerUsers from './routes/users.js'
 import routerProducts from './routes/products.js'
 import routerOrders from './routes/orders.js'
 import './passport/passport.js'
+import bot from './linebot/index.js'
 
 const app = express()
 
@@ -29,7 +30,7 @@ const app = express()
 //     })
 //   }
 // }))
-
+app.use('/line', bot)
 app.use(cors({
   origin(origin, callback) {
     if (origin === undefined || origin.includes('github') || origin.includes('localhost')) {
