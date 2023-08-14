@@ -109,6 +109,8 @@ export const Alleditorder = async (req, res) => {
       checkorder.ok = '訂單已取消'
     } else if (req.body.check === 5) {
       checkorder.ok = '取消確認中'
+    } else if (req.body.check === 6) {
+      checkorder.ok = '結單無法取消'
     } else {
       checkorder.ok = '訂單數據錯誤'
     }
