@@ -51,7 +51,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, '缺少製造商'],
     enum: {
-      values: ['MIMEYOI', 'ALTER', '好微笑', '壽屋'],
+      values: ['MIMEYOI', 'ALTER', '好微笑', 'DAIKI'],
       message: '無此製造商'
     }
   },
