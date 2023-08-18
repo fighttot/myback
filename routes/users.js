@@ -1,12 +1,14 @@
 import express from 'express'
 import contentType from '../middlewares/contentType.js'
-import { create, login, logout, extend, getProfile, getCart, editCart, getLike, editLike, overLike, overLikesing } from '../controllers/users.js'
+import { create, login, logout, extend, getProfile, getCart, editCart, getLike, editLike, overLike, overLikesing, edit, forget } from '../controllers/users.js'
 import * as auth from '../middlewares/auth.js'
 
 const router = express.Router()
 
 router.post('/', contentType('application/json'), create)
 router.post('/login', contentType('application/json'), auth.login, login)
+router.patch('/edit', auth.jwt, contentType('application/json'), edit)
+router.patch('/forget', contentType('application/json'), auth.forget, forget)
 router.delete('/logout', auth.jwt, logout)
 router.patch('/extend', auth.jwt, extend)
 router.get('/me', auth.jwt, getProfile)

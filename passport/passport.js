@@ -69,3 +69,28 @@ passport.use('jwt', new passportJWT.Strategy({
     }
   }
 }))
+
+// 忘記密碼
+passport.use('forget', new PassportLocal.Strategy({
+  usernameField: 'account',
+  passwordField: 'password'
+}, async (account, password, done) => {
+  try {
+    const user = await users.findOne({ account })
+    if (!user) {
+      throw new Error('USER')
+    }
+    if (user.email !== password) {
+      throw new Error('email')
+    }
+    return done(null, user)
+  } catch (error) {
+    if (error.message === 'USER') {
+      return done(null, false, { message: '帳號不存在' })
+    } else if (error.message === 'email') {
+      return done(null, false, { message: '信箱錯誤' })
+    } else {
+      return done(error, false, { message: '未知錯誤' })
+    }
+  }
+}))

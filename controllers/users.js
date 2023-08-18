@@ -63,6 +63,92 @@ export const login = async (req, res) => {
   }
 }
 
+export const edit = async (req, res) => {
+  try {
+    // 會被清空
+    const item = await users.findByIdAndUpdate(req.user.id, {
+      account: req.body?.account,
+      password: req.body?.password,
+      name: req.body?.name,
+      email: req.body?.email
+    })
+
+    if (!item) { throw new Error('NOT FOUND') }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '修改成功',
+      // result: {
+      //   account: item.account,
+      //   name: item.name,
+      //   email: item.email
+      // }
+      result: {
+        account: req.body.account,
+        name: req.body.name,
+        email: req.body.email
+      }
+    })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: grtMessageFromValidationError(error)
+      })
+    } else if (error.name === 'CastError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: '格式錯誤(id錯誤)'
+      })
+    } else if (error.message === 'NOT FOUND') {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: '找不到'
+      })
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: '發生錯誤'
+      })
+    }
+  }
+}
+
+export const forget = async (req, res) => {
+  try {
+    const result = await users.findByIdAndUpdate(req.user.id, {
+      password: req.body.password2
+    })
+
+    if (!result) { throw new Error('NOT FOUND') }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '密碼更改完成'
+    })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: grtMessageFromValidationError(error)
+      })
+    } else if (error.name === 'CastError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: '格式錯誤(id錯誤)'
+      })
+    } else if (error.message === 'NOT FOUND') {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: '找不到'
+      })
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: '發生錯誤'
+      })
+    }
+  }
+}
+
 export const logout = async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(token => token !== req.token)

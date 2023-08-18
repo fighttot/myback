@@ -41,3 +41,20 @@ export const jwt = (req, res, next) => {
     next()
   })(req, res, next)
 }
+
+// 忘記密碼
+export const forget = (req, res, next) => {
+  passport.authenticate('forget', { session: false }, (error, user, info) => {
+    if (error || !user) {
+      if (info.message === 'Missing credentials') {
+        info.message = '欄位錯誤'
+      }
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        succsss: false,
+        message: info.message
+      })
+    }
+    req.user = user
+    next()
+  })(req, res, next)
+}
