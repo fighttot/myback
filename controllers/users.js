@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { grtMessageFromValidationError } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
 import products from '../models/products.js'
+import bcrypt from 'bcrypt'
 
 export const create = async (req, res) => {
   try {
@@ -115,11 +116,17 @@ export const edit = async (req, res) => {
 
 export const forget = async (req, res) => {
   try {
-    const result = await users.findByIdAndUpdate(req.user.id, {
-      password: req.body.password2
-    })
+    const user = await users.find()
+    const idx = await user.findIndex(item => item.account === req.body.account)
+    if (idx === -1) {
+      throw new Error('NOT FOUND')
+    } else if (bcrypt.compareSync(req.body.password, user[idx].password)) {
+      throw new Error('PASS')
+    } else if (user[idx].email === req.body.email) {
+      user[idx].password = req.body.password
+    } else { throw new Error('EMAIL') }
 
-    if (!result) { throw new Error('NOT FOUND') }
+    await user[idx].save()
     res.status(StatusCodes.OK).json({
       success: true,
       message: '密碼更改完成'
@@ -130,17 +137,23 @@ export const forget = async (req, res) => {
         success: false,
         message: grtMessageFromValidationError(error)
       })
-    } else if (error.name === 'CastError') {
+    } else if (error.message === 'EMAIL') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: '格式錯誤(id錯誤)'
+        message: '信箱輸入錯誤'
       })
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: '找不到'
+        message: '沒有這個帳號'
+      })
+    } else if (error.message === 'PASS') {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: '密碼與之前重複'
       })
     } else {
+      console.log(error)
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: '發生錯誤'
