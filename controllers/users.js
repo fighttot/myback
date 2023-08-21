@@ -67,26 +67,22 @@ export const login = async (req, res) => {
 export const edit = async (req, res) => {
   try {
     // 會被清空
-    const item = await users.findByIdAndUpdate(req.user.id, {
-      account: req.body?.account,
-      password: req.body?.password,
-      name: req.body?.name,
-      email: req.body?.email
-    })
+    const item = await users.findByIdAndUpdate(req.user.id, req.body
+      // account: req.body?.account,
+      // password: req.body?.password,
+      // name: req.body?.name,
+      // email: req.body?.email
+      , { new: true })
 
     if (!item) { throw new Error('NOT FOUND') }
     res.status(StatusCodes.OK).json({
       success: true,
       message: '修改成功',
-      // result: {
-      //   account: item.account,
-      //   name: item.name,
-      //   email: item.email
-      // }
       result: {
-        account: req.body.account,
-        name: req.body.name,
-        email: req.body.email
+        account: item.account,
+        name: item.name,
+        email: item.email,
+        password: item.password
       }
     })
   } catch (error) {

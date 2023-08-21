@@ -93,6 +93,33 @@ export const get = async (req, res) => {
   }
 }
 
+export const getone = async (req, res) => {
+  try {
+    const result = await products.find({
+      $and: [
+        {
+          $or: [
+            { name: new RegExp(req.query.search, 'i') },
+            { category: new RegExp(req.query.search, 'i') },
+            { manufacturers: new RegExp(req.query.search, 'i') }
+          ]
+        },
+        { sell: true } // 只查詢 sell 值為 true 的產品
+      ]
+    })
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result
+    })
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: '發生錯誤'
+    })
+  }
+}
+
 export const getId = async (req, res) => {
   try {
     // const abd = await users.find()
