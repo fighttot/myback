@@ -1,7 +1,8 @@
 import express from 'express'
 import contentType from '../middlewares/contentType.js'
-import { create, login, logout, extend, getProfile, getCart, editCart, getLike, editLike, overLike, overLikesing, edit, forget } from '../controllers/users.js'
+import { create, login, logout, extend, getProfile, getCart, editCart, getLike, editLike, overLike, overLikesing, edit, forget, uploadsingleomg } from '../controllers/users.js'
 import * as auth from '../middlewares/auth.js'
+import uploadsingle from '../middlewares/uploadsingle.js'
 
 const router = express.Router()
 
@@ -21,5 +22,7 @@ router.post('/like', contentType('application/json'), auth.jwt, editLike)
 
 router.post('/likeover', auth.jwt, overLike)
 router.post('/likeoversing', contentType('application/json'), auth.jwt, overLikesing)
+
+router.post('/upimg', auth.jwt, contentType('multipart/form-data'), uploadsingle, uploadsingleomg)
 
 export default router

@@ -67,6 +67,9 @@ const schema = new mongoose.Schema({
   role: {
     type: Number,
     default: UserRole.USER
+  },
+  image: {
+    type: String
   }
 }, { versionKey: false })
 

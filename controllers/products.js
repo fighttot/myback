@@ -128,7 +128,7 @@ export const getId = async (req, res) => {
     //   abd[i].like.some(item => item.product.toString() === req.params.id.toString())
     // }
 
-    const result = await products.findById(req.params.id).populate('peopleSay.user', 'name account')
+    const result = await products.findById(req.params.id).populate('peopleSay.user', 'name account image')
     if (!result) {
       throw new Error('NOT FOUND')
     }

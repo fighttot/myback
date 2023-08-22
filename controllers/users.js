@@ -53,7 +53,8 @@ export const login = async (req, res) => {
         email: req.user.email,
         role: req.user.role,
         cart: req.user.cart.reduce((totle, current) => totle + current.quantity, 0),
-        like: req.user.like.length
+        like: req.user.like.length,
+        image: req.user.image
       }
     })
   } catch (error) {
@@ -208,7 +209,8 @@ export const getProfile = (req, res) => {
         role: req.user.role,
         name: req.user.name,
         cart: req.user.cart.reduce((totle, current) => totle + current.quantity, 0),
-        like: req.user.like.length
+        like: req.user.like.length,
+        image: req.user.image
       }
     })
   } catch (error) {
@@ -433,6 +435,41 @@ export const overLikesing = async (req, res) => {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: grtMessageFromValidationError(error)
+      })
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: '發生錯誤'
+      })
+    }
+  }
+}
+
+export const uploadsingleomg = async (req, res) => {
+  try {
+    const item = await users.findByIdAndUpdate(req.user.id,
+      { image: req.file.path }, { new: true })
+    if (!item) { throw new Error('NOT FOUND') }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: '',
+      result: item.image
+    })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: grtMessageFromValidationError(error)
+      })
+    } else if (error.name === 'CastError') {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: '格式錯誤(id錯誤)'
+      })
+    } else if (error.message === 'NOT FOUND') {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: '找不到'
       })
     } else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
