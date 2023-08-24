@@ -220,7 +220,7 @@ export const AddSay = async (req, res) => {
       await product.save()
     }
     const result = await products.findById(req.params.id, 'peopleSay')
-      .populate('peopleSay.user', 'name account')
+      .populate('peopleSay.user', 'name account image')
     res.status(StatusCodes.OK).json({
       success: true,
       message: '新增成功',
@@ -264,7 +264,7 @@ export const editSay = async (req, res) => {
       await product.save()
     }
     const result = await products.findById(req.params.id, 'peopleSay')
-      .populate('peopleSay.user', 'name account')
+      .populate('peopleSay.user', 'name account image')
     res.status(StatusCodes.OK).json({
       success: true,
       message: '修改成功',
