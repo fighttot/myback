@@ -12,25 +12,24 @@ import './passport/passport.js'
 import bot from './linebot/index.js'
 
 const app = express()
-
-// app.use(rateLimit({
-//   // 15分鐘內最多100次請求
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-//   // 回應
-//   standardHeaders: true,
-//   legacyHeaders: false,
-//   // 超出流量時的回應
-//   statusCode: StatusCodes.TOO_MANY_REQUESTS,
-//   message: '超過流量，太多請求',
-//   handler(req, res, next, options) {
-//     res.status(options.statusCode).json({
-//       success: false,
-//       message: options.message
-//     })
-//   }
-// }))
 app.use('/line', bot)
+app.use(rateLimit({
+  // 15分鐘內最多200次請求
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  // 回應
+  standardHeaders: true,
+  legacyHeaders: false,
+  // 超出流量時的回應
+  statusCode: StatusCodes.TOO_MANY_REQUESTS,
+  message: '超過流量，太多請求',
+  handler(req, res, next, options) {
+    res.status(options.statusCode).json({
+      success: false,
+      message: options.message
+    })
+  }
+}))
 app.use(cors({
   origin(origin, callback) {
     if (origin === undefined || origin.includes('github') || origin.includes('localhost')) {
